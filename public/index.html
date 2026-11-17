@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de estudiantes | Colegio</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="brand">
+        <div class="brand__icon" aria-hidden="true">🎓</div>
+        <div>
+          <h1>Gestión de estudiantes</h1>
+          <p>Colegio · API GraphQL con SQLite</p>
+        </div>
+      </div>
+      <span class="badge-api"><span class="badge-api__dot"></span> API en línea</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="columna" aria-label="Consultas y registro">
+      <article class="card">
+        <div class="card__head">
+          <div>
+            <h2>Consultar estudiante</h2>
+            <p class="card__desc">Busca por número de identificación.</p>
+          </div>
+          <span class="tag">Query</span>
+        </div>
+        <form id="form-busqueda" class="busqueda">
+          <label class="sr-only" for="buscar-identificacion">Número de identificación</label>
+          <input id="buscar-identificacion" type="text" inputmode="numeric"
+                 placeholder="Ej. 1002345680" autocomplete="off" />
+          <button type="submit" class="btn btn--primary" id="btn-buscar">Buscar</button>
+        </form>
+        <div id="resultado-busqueda" class="resultado" aria-live="polite">
+          <p class="vacio">Escribe una identificación y pulsa <strong>Buscar</strong>.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card__head">
+          <div>
+            <h2>Nuevo estudiante</h2>
+            <p class="card__desc">Registra un estudiante en la base de datos.</p>
+          </div>
+          <span class="tag tag--mutation">Mutation</span>
+        </div>
+        <form id="form-estudiante" class="formulario">
+          <div class="campo">
+            <label for="numeroIdentificacion">Número de identificación *</label>
+            <input id="numeroIdentificacion" name="numeroIdentificacion" required maxlength="30" placeholder="1002345690" />
+          </div>
+          <div class="campo">
+            <label for="nombres">Nombres *</label>
+            <input id="nombres" name="nombres" required placeholder="Laura Sofía" />
+          </div>
+          <div class="campo">
+            <label for="apellidos">Apellidos *</label>
+            <input id="apellidos" name="apellidos" required placeholder="Torres Medina" />
+          </div>
+          <div class="campo">
+            <label for="fechaNacimiento">Fecha de nacimiento</label>
+            <input id="fechaNacimiento" name="fechaNacimiento" type="date" />
+          </div>
+          <div class="campo">
+            <label for="genero">Género</label>
+            <select id="genero" name="genero">
+              <option value="">Seleccione…</option>
+              <option value="F">Femenino</option>
+              <option value="M">Masculino</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="grado">Grado *</label>
+            <input id="grado" name="grado" required placeholder="9°" />
+          </div>
+          <div class="campo">
+            <label for="seccion">Sección</label>
+            <input id="seccion" name="seccion" placeholder="A" />
+          </div>
+          <div class="campo">
+            <label for="correo">Correo electrónico</label>
+            <input id="correo" name="correo" type="email" placeholder="laura@colegio.edu.co" />
+          </div>
+          <div class="campo">
+            <label for="telefono">Teléfono</label>
+            <input id="telefono" name="telefono" type="tel" placeholder="3001234575" />
+          </div>
+          <div class="campo campo--completo">
+            <label for="direccion">Dirección</label>
+            <input id="direccion" name="direccion" placeholder="Calle 10 # 20-30" />
+          </div>
+          <div class="campo">
+            <label for="promedio">Promedio (0 – 5)</label>
+            <input id="promedio" name="promedio" type="number" step="0.1" min="0" max="5" placeholder="4.5" />
+          </div>
+          <div class="campo">
+            <label for="fechaIngreso">Fecha de ingreso *</label>
+            <input id="fechaIngreso" name="fechaIngreso" type="date" required />
+          </div>
+          <label class="check campo--completo">
+            <input type="checkbox" id="activo" name="activo" checked />
+            <span>Estudiante activo</span>
+          </label>
+          <div class="acciones campo--completo">
+            <button type="submit" class="btn btn--primary" id="btn-guardar">Guardar estudiante</button>
+            <button type="reset" class="btn btn--ghost" id="btn-limpiar">Limpiar</button>
+          </div>
+        </form>
+      </article>
+    </section>
+
+    <section class="columna columna--lista" aria-label="Listado y reportes">
+      <article class="card card--tabla">
+        <div class="card__head card__head--acciones">
+          <div>
+            <h2>Estudiantes registrados</h2>
+            <p class="card__desc"><span id="total-estudiantes">0</span> registros en la base de datos.</p>
+          </div>
+          <div class="botones-tabla">
+            <button type="button" class="btn btn--ghost" id="btn-actualizar">Actualizar lista</button>
+            <button type="button" class="btn btn--primary" id="btn-pdf">Descargar PDF</button>
+          </div>
+        </div>
+        <label class="check check--filtro">
+          <input type="checkbox" id="solo-activos" />
+          <span>Incluir solo estudiantes activos en el reporte PDF</span>
+        </label>
+        <div class="tabla-wrap">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Identificación</th>
+                <th>Estudiante</th>
+                <th>Grado</th>
+                <th>Promedio</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="cuerpo-tabla">
+              <tr><td colspan="5" class="vacio">Cargando estudiantes…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

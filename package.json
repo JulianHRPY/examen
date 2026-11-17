@@ -1,0 +1,23 @@
+{
+  "name": "api-graphql-colegio",
+  "version": "1.0.0",
+  "description": "API GraphQL para consultar la base de datos de estudiantes de un colegio",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "demo": "node scripts/demo.js",
+    "reset-db": "node scripts/reset-db.js"
+  },
+  "dependencies": {
+    "@apollo/server": "^5.0.0",
+    "@as-integrations/express5": "^1.0.0",
+    "express": "^5.1.0",
+    "graphql": "^16.11.0",
+    "pdfkit": "^0.17.2"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  }
+}
